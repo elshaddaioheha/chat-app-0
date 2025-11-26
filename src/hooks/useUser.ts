@@ -65,6 +65,7 @@ export const useUser = () => {
               username: walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4),
               xp: 0,
               total_active_time: 0,
+              last_active: new Date().toISOString(),
               public_key: publicKeyStr,
               notification_enabled: false,
             })

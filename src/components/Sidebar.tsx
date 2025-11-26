@@ -1,6 +1,6 @@
 import React from 'react';
 import { useUser } from '../hooks/useUser';
-import { useNotifications } from '../hooks/useNotificatons';
+import { useNotifications } from '../hooks/useNotifications';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Sidebar.css';
 

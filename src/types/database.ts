@@ -1,4 +1,113 @@
-// Updated database types for ChatXP
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  public: {
+    Tables: {
+      users: {
+        Row: User
+        Insert: Omit<User, 'id' | 'created_at'>
+        Update: Partial<Omit<User, 'id' | 'created_at'>>
+        Relationships: []
+      }
+      messages: {
+        Row: Message
+        Insert: Omit<Message, 'id' | 'created_at' | 'sender'>
+        Update: Partial<Omit<Message, 'id' | 'created_at' | 'sender'>>
+        Relationships: [
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_recipient_id_fkey"
+            columns: ["recipient_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      groups: {
+        Row: Group
+        Insert: Omit<Group, 'id' | 'created_at' | 'members'>
+        Update: Partial<Omit<Group, 'id' | 'created_at' | 'members'>>
+        Relationships: [
+          {
+            foreignKeyName: "groups_created_by_fkey"
+            columns: ["created_by"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      group_members: {
+        Row: GroupMember
+        Insert: Omit<GroupMember, 'id' | 'joined_at' | 'user'>
+        Update: Partial<Omit<GroupMember, 'id' | 'joined_at' | 'user'>>
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      xp_transactions: {
+        Row: XPTransaction
+        Insert: Omit<XPTransaction, 'id' | 'created_at'>
+        Update: Partial<Omit<XPTransaction, 'id' | 'created_at'>>
+        Relationships: []
+      }
+      token_deployments: {
+        Row: TokenDeployment
+        Insert: Omit<TokenDeployment, 'id' | 'created_at'>
+        Update: Partial<Omit<TokenDeployment, 'id' | 'created_at'>>
+        Relationships: []
+      }
+      premium_features: {
+        Row: PremiumFeature
+        Insert: Omit<PremiumFeature, 'id' | 'unlocked_at'>
+        Update: Partial<Omit<PremiumFeature, 'id' | 'unlocked_at'>>
+        Relationships: []
+      }
+      notifications: {
+        Row: Notification
+        Insert: Omit<Notification, 'id' | 'created_at'>
+        Update: Partial<Omit<Notification, 'id' | 'created_at'>>
+        Relationships: []
+      }
+    }
+    Views: {
+      leaderboard: {
+        Row: LeaderboardEntry
+      }
+    }
+    Functions: {
+      [_: string]: never
+    }
+    Enums: {
+      [_: string]: never
+    }
+    CompositeTypes: {
+      [_: string]: never
+    }
+  }
+}
+
 export interface User {
   id: string;
   wallet_address: string;

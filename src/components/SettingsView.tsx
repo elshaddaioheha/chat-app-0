@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../hooks/useUser';
 import { useActiveTime } from '../hooks/useActiveTime';
-import { useNotifications } from '../hooks/useNotificatons';
+import { useNotifications } from '../hooks/useNotifications';
 import { requestNotificationPermission } from '../lib/notification';
 import { supabase } from '../lib/supabase';
 import './SettingsView.css';
@@ -57,7 +57,7 @@ const SettingsView: React.FC = () => {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    
+
     if (days > 0) {
       return `${days}d ${hours % 24}h`;
     } else if (hours > 0) {
