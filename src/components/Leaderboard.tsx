@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../hooks/useUser';
 import { supabase } from '../lib/supabase';
 import type { LeaderboardEntry } from '../types/database';
-import './Leaderboard.css';
+import '../styles/features.css';
 
 const Leaderboard: React.FC = () => {
   const { user } = useUser();
@@ -54,7 +54,7 @@ const Leaderboard: React.FC = () => {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    
+
     if (days > 0) {
       return `${days}d ${hours % 24}h`;
     } else if (hours > 0) {

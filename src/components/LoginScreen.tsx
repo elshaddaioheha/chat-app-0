@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePrivy } from '@privy-io/react-auth';
-import './LoginScreen.css';
+import '../styles/auth.css';
 
 const LoginScreen: React.FC = () => {
   const { login, ready } = usePrivy();

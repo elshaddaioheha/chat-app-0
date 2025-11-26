@@ -4,7 +4,7 @@ import { useActiveTime } from '../hooks/useActiveTime';
 import { useNotifications } from '../hooks/useNotifications';
 import { requestNotificationPermission } from '../lib/notification';
 import { supabase } from '../lib/supabase';
-import './SettingsView.css';
+import '../styles/features.css';
 
 const SettingsView: React.FC = () => {
   const { user } = useUser();

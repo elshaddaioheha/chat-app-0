@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { encryptGroupMessage, decryptGroupMessage } from '../lib/encryption';
 import { setGroupKey, getGroupKey, generateGroupKey } from '../lib/groupEncryption';
 import type { Group, Message } from '../types/database';
-import './GroupsView.css';
+import '../styles/chat.css';
 
 const GroupsView: React.FC = () => {
   const { user } = useUser();
@@ -223,7 +223,7 @@ const GroupsView: React.FC = () => {
               {messages.map((msg) => {
                 const isOwn = msg.sender_id === user?.id;
                 let content = '[Decryption failed]';
-                
+
                 try {
                   const groupKey = getGroupKey(selectedGroup.id);
                   if (groupKey && msg.encrypted_content) {

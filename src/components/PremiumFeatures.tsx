@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '../hooks/useUser';
 import { supabase } from '../lib/supabase';
-import './PremiumFeatures.css';
+import '../styles/features.css';
 
 const PremiumFeatures: React.FC = () => {
   const { user } = useUser();

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useUser } from '../hooks/useUser';
 import { decryptMessage } from '../lib/encryption';
 import type { Message, User } from '../types/database';
-import './ChatInterface.css';
+import '../styles/chat.css';
 
 interface ChatInterfaceProps {
   recipientId: string;
@@ -46,16 +46,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const getMessageContent = (msg: Message): string => {
     try {
       if (!msg.encrypted_content) return '[No content]';
-      
+
       // Try to parse as JSON (encrypted message)
       const encryptedData = JSON.parse(msg.encrypted_content);
-      
+
       // Check if it's an encrypted message format
       if (encryptedData.encrypted && encryptedData.nonce && encryptedData.ephemeralPublicKey) {
         if (!privateKey) return '[Decryption key not available]';
         return decryptMessage(encryptedData, privateKey);
       }
-      
+
       // If not encrypted format, return as-is (shouldn't happen)
       return msg.encrypted_content;
     } catch {

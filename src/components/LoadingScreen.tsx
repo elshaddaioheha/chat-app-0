@@ -1,5 +1,5 @@
 import React from 'react';
-import './LoadingScreen.css';
+import '../styles/auth.css';
 
 const LoadingScreen: React.FC = () => {
   return (

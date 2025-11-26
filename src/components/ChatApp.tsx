@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import './ChatApp.css';
+import '../styles/chat.css';
 
 const ChatApp: React.FC = () => {
   const navigate = useNavigate();

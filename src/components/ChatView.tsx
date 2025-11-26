@@ -3,7 +3,7 @@ import { useUser } from '../hooks/useUser';
 import { supabase } from '../lib/supabase';
 import type { Message, User } from '../types/database';
 import ChatInterface from './ChatInterface';
-import './ChatView.css';
+import '../styles/chat.css';
 import { encryptMessage } from '../lib/encryption';
 
 const ChatView: React.FC = () => {

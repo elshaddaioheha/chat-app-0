@@ -1,5 +1,5 @@
 import React from 'react';
-import './SetupGuide.css';
+import '../styles/auth.css';
 
 const SetupGuide: React.FC = () => {
   return (
@@ -38,7 +38,7 @@ const SetupGuide: React.FC = () => {
           <h2>3️⃣ Environment Variables</h2>
           <p>Create a <code>.env</code> file in the root directory with:</p>
           <pre className="env-example">
-{`VITE_PRIVY_APP_ID=your_privy_app_id_here
+            {`VITE_PRIVY_APP_ID=your_privy_app_id_here
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_actual_supabase_key_here
 VITE_CLANKER_API_KEY=your_clanker_api_key_here (optional)`}
