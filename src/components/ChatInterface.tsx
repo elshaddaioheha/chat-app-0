@@ -65,14 +65,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   };
 
   return (
-    <div className="chat-interface">
+    <div className="chat-interface" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div className="chat-header">
-        <div className="header-avatar placeholder">
-          {recipient?.username?.charAt(0).toUpperCase() || 'U'}
-        </div>
-        <div className="header-info">
+        <div className="chat-header-info">
           <h3>{recipient?.username || 'Unknown User'}</h3>
-          <p className="header-status">Online</p>
         </div>
       </div>
 
@@ -83,12 +79,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           const isEncrypted = msg.encrypted_content && msg.encrypted_content.startsWith('{');
 
           return (
-            <div key={msg.id} className={`message ${isOwn ? 'own' : 'other'}`}>
-              <div className="message-content">
-                {isEncrypted && <span className="encrypted-badge">🔒</span>}
+            <div key={msg.id} className={`message ${isOwn ? 'sent' : 'received'}`}>
+              <div className="message-bubble">
+                {isEncrypted && <span style={{ marginRight: 4 }}>🔒</span>}
                 {msg.file_url && (
                   <a href={msg.file_url} download={msg.file_name} className="file-link">
-                    📎 {msg.file_name} ({msg.file_size ? (msg.file_size / 1024).toFixed(1) + ' KB' : ''})
+                    📎 {msg.file_name}
                   </a>
                 )}
                 <p>{content}</p>
@@ -100,30 +96,28 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      <form className="message-input-form" onSubmit={handleSubmit}>
-        <div className="input-options">
-          <label className="encrypt-checkbox">
-            <input
-              type="checkbox"
-              checked={encrypted}
-              onChange={(e) => setEncrypted(e.target.checked)}
-            />
-            <span>Encrypt</span>
-          </label>
-        </div>
-        <div className="input-container">
-          <input
-            type="text"
+      <div className="chat-input-area">
+        <form className="chat-input-form" onSubmit={handleSubmit}>
+          <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type a message..."
-            className="message-input"
+            className="chat-input"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
           />
           <button type="submit" className="send-button" disabled={!message.trim()}>
-            Send
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

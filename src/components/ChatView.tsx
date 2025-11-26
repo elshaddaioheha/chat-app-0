@@ -136,24 +136,24 @@ const ChatView: React.FC = () => {
 
   return (
     <div className="chat-view">
-      <div className="chat-users-list">
-        <h2>Users</h2>
-        <div className="users-container">
+      <div className="chat-list">
+        <div className="chat-list-header">
+          <h2>Messages</h2>
+        </div>
+        <div className="user-list">
           {users.map((u) => (
-            <button
+            <div
               key={u.id}
               className={`user-item ${selectedUserId === u.id ? 'active' : ''}`}
               onClick={() => setSelectedUserId(u.id)}
             >
-              <div className="user-avatar-small placeholder">
-                {u.username?.charAt(0).toUpperCase() || 'U'}
-              </div>
+              <div className={`user-status ${u.is_online ? 'online' : ''}`} />
               <span>{u.username}</span>
-            </button>
+            </div>
           ))}
         </div>
       </div>
-      <div className="chat-interface-container">
+      <div className="chat-area">
         {selectedUserId ? (
           <ChatInterface
             recipientId={selectedUserId}
@@ -162,8 +162,8 @@ const ChatView: React.FC = () => {
             onSendMessage={handleSendMessage}
           />
         ) : (
-          <div className="no-chat-selected">
-            <p>Select a user to start chatting</p>
+          <div className="empty-chat">
+            <p>Select a conversation to start messaging</p>
           </div>
         )}
       </div>

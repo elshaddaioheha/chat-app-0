@@ -24,35 +24,22 @@ const LoginScreen: React.FC = () => {
   }
 
   return (
-    <div className="login-screen">
-      <div className="login-container">
-        <div className="login-header">
-          <h1>ChatXP</h1>
-          <p>Decentralized encrypted chat on Base</p>
-          <p className="subtitle">Connect your wallet to get started</p>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-logo">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <h1 className="auth-title">ChatXP</h1>
+          <p className="auth-subtitle">Decentralized encrypted chat on Base</p>
         </div>
-        <div className="login-form">
-          <button onClick={handleLogin} className="wallet-connect-button">
-            <span className="wallet-icon">🔐</span>
+
+        <div className="auth-actions">
+          <button onClick={handleLogin} className="btn-primary">
             Connect Wallet
           </button>
-          <p className="wallet-info">
-            Supports MetaMask, Coinbase Wallet, WalletConnect, and more
-          </p>
-        </div>
-        <div className="login-features">
-          <div className="feature-item">
-            <span className="feature-icon">🔒</span>
-            <span>End-to-End Encrypted</span>
-          </div>
-          <div className="feature-item">
-            <span className="feature-icon">⚡</span>
-            <span>Earn XP Rewards</span>
-          </div>
-          <div className="feature-item">
-            <span className="feature-icon">🪙</span>
-            <span>Deploy Tokens</span>
-          </div>
         </div>
       </div>
     </div>

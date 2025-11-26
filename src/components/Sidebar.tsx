@@ -30,18 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate }) => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <div className="user-info">
-          <div className="user-avatar-placeholder">
-            {user?.username?.charAt(0).toUpperCase() || 'U'}
-          </div>
-          <div className="user-details">
-            <h3>{user?.username || 'User'}</h3>
-            <div className="user-stats">
-              <p className="user-xp">⚡ {user?.xp || 0} XP</p>
-              <p className="user-status">Online</p>
-            </div>
-          </div>
-        </div>
+        <h1>ChatXP</h1>
       </div>
 
       <nav className="sidebar-nav">
@@ -51,8 +40,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate }) => {
             className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
             onClick={() => handleNavigate(item.path)}
           >
-            <span className="nav-icon">{item.icon}</span>
-            <span className="nav-label">{item.label}</span>
+            {item.icon}
+            <span>{item.label}</span>
             {item.path === '/chat' && unreadCount > 0 && (
               <span className="nav-badge">{unreadCount}</span>
             )}
@@ -61,9 +50,15 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate }) => {
       </nav>
 
       <div className="sidebar-footer">
-        <button className="logout-btn" onClick={() => window.location.href = '/sign-out'}>
-          Sign Out
-        </button>
+        <div className="user-profile">
+          <div className="user-avatar">
+            {user?.username?.charAt(0).toUpperCase() || 'U'}
+          </div>
+          <div className="user-info">
+            <div className="user-address">{user?.username || 'User'}</div>
+            <div className="user-xp">{user?.xp || 0} XP</div>
+          </div>
+        </div>
       </div>
     </div>
   );
