@@ -1,0 +1,163 @@
+.setup-guide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  padding: 20px;
+  color: #e0e0e0;
+}
+
+.setup-container {
+  max-width: 800px;
+  width: 100%;
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.setup-container h1 {
+  font-size: 32px;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #4f9cf9 0%, #7b68ee 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+}
+
+.setup-description {
+  text-align: center;
+  color: #888;
+  margin-bottom: 32px;
+  font-size: 16px;
+}
+
+.setup-section {
+  margin-bottom: 32px;
+  padding: 24px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.setup-section h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #e0e0e0;
+}
+
+.setup-section ol {
+  padding-left: 24px;
+  line-height: 1.8;
+  color: #ccc;
+}
+
+.setup-section li {
+  margin-bottom: 8px;
+}
+
+.setup-section code {
+  background: #1a1a1a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: #4f9cf9;
+  font-size: 14px;
+}
+
+.setup-section a {
+  color: #4f9cf9;
+  text-decoration: none;
+}
+
+.setup-section a:hover {
+  text-decoration: underline;
+}
+
+.setup-section strong {
+  color: #e0e0e0;
+}
+
+.env-example {
+  background: #1a1a1a;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #4f9cf9;
+  margin: 16px 0;
+}
+
+.note {
+  color: #888;
+  font-style: italic;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.setup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid #333;
+}
+
+.reload-button {
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #4f9cf9 0%, #7b68ee 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.reload-button:hover {
+  opacity: 0.9;
+}
+
+.external-link {
+  padding: 12px 24px;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #4f9cf9;
+  text-decoration: none;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.external-link:hover {
+  background: #333;
+  border-color: #4f9cf9;
+}
+
+.setup-help {
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(79, 156, 249, 0.1);
+  border: 1px solid rgba(79, 156, 249, 0.3);
+  border-radius: 8px;
+  text-align: center;
+  color: #888;
+}
+
+.setup-help code {
+  background: #1a1a1a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: #4f9cf9;
+}
+
