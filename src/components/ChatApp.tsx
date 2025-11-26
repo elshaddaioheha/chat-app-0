@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import TopBar from './TopBar';
 import '../styles/chat.css';
 
 const ChatApp: React.FC = () => {
@@ -14,6 +15,7 @@ const ChatApp: React.FC = () => {
     <div className="chat-app">
       <Sidebar onNavigate={handleNavigate} />
       <div className="main-content">
+        <TopBar />
         <Outlet />
       </div>
     </div>

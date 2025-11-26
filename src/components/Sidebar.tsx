@@ -2,6 +2,7 @@ import React from 'react';
 import { useUser } from '../hooks/useUser';
 import { useNotifications } from '../hooks/useNotifications';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { MessageSquare, Users, Trophy, Star, Settings, LogOut } from 'lucide-react';
 import '../styles/layout.css';
 
 interface SidebarProps {
@@ -15,11 +16,11 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate }) => {
   const location = useLocation();
 
   const menuItems = [
-    { path: '/chat', label: 'Chat', icon: '💬' },
-    { path: '/groups', label: 'Groups', icon: '👥' },
-    { path: '/leaderboard', label: 'Leaderboard', icon: '🏆' },
-    { path: '/premium', label: 'Premium', icon: '⭐' },
-    { path: '/settings', label: 'Settings', icon: '⚙️' },
+    { path: '/chat', label: 'Chat', icon: <MessageSquare size={20} /> },
+    { path: '/groups', label: 'Groups', icon: <Users size={20} /> },
+    { path: '/leaderboard', label: 'Leaderboard', icon: <Trophy size={20} /> },
+    { path: '/premium', label: 'Premium', icon: <Star size={20} /> },
+    { path: '/settings', label: 'Settings', icon: <Settings size={20} /> },
   ];
 
   const handleNavigate = (path: string) => {
@@ -50,15 +51,10 @@ const Sidebar: React.FC<SidebarProps> = ({ onNavigate }) => {
       </nav>
 
       <div className="sidebar-footer">
-        <div className="user-profile">
-          <div className="user-avatar">
-            {user?.username?.charAt(0).toUpperCase() || 'U'}
-          </div>
-          <div className="user-info">
-            <div className="user-address">{user?.username || 'User'}</div>
-            <div className="user-xp">{user?.xp || 0} XP</div>
-          </div>
-        </div>
+        <button className="nav-item logout-btn" onClick={() => window.location.href = '/sign-out'}>
+          <LogOut size={20} />
+          <span>Sign Out</span>
+        </button>
       </div>
     </div>
   );

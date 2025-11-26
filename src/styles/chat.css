@@ -18,11 +18,33 @@
 .chat-list-header {
     padding: var(--spacing-md);
     border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .chat-list-header h2 {
     font-size: var(--font-size-xl);
     font-weight: 600;
+}
+
+.refresh-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--radius-full);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.refresh-btn:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+    transform: rotate(180deg);
 }
 
 .user-list {
@@ -56,11 +78,42 @@
     height: 8px;
     border-radius: var(--radius-full);
     background-color: var(--color-text-muted);
+    flex-shrink: 0;
 }
 
 .user-status.online {
     background-color: var(--color-online);
     box-shadow: 0 0 0 2px var(--color-background);
+}
+
+.user-info-item {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.username {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-address-tiny {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+.loading-users,
+.empty-users {
+    padding: var(--spacing-lg);
+    text-align: center;
+    color: var(--color-text-muted);
+}
+
+.empty-users .small {
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
 }
 
 /* Chat Area */

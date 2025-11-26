@@ -5,6 +5,7 @@ import type { Message, User } from '../types/database';
 import ChatInterface from './ChatInterface';
 import '../styles/chat.css';
 import { encryptMessage } from '../lib/encryption';
+import { RefreshCw, User as UserIcon } from 'lucide-react';
 
 const ChatView: React.FC = () => {
   const { user, privateKey } = useUser();
@@ -13,26 +14,26 @@ const ChatView: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const loadUsers = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .neq('id', user?.id) // Ensure we don't fetch ourselves
+        .order('username');
+
+      if (error) throw error;
+      setUsers(data || []);
+    } catch (error) {
+      console.error('Error loading users:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
-
-    const loadUsers = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .neq('id', user.id)
-          .order('username');
-
-        if (error) throw error;
-        setUsers(data || []);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error loading users:', error);
-        setLoading(false);
-      }
-    };
-
     loadUsers();
   }, [user]);
 
@@ -126,31 +127,38 @@ const ChatView: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="chat-view loading">
-        <p>Loading users...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="chat-view">
       <div className="chat-list">
         <div className="chat-list-header">
           <h2>Messages</h2>
+          <button onClick={loadUsers} className="refresh-btn" title="Refresh Users">
+            <RefreshCw size={16} />
+          </button>
         </div>
         <div className="user-list">
-          {users.map((u) => (
-            <div
-              key={u.id}
-              className={`user-item ${selectedUserId === u.id ? 'active' : ''}`}
-              onClick={() => setSelectedUserId(u.id)}
-            >
-              <div className={`user-status ${u.is_online ? 'online' : ''}`} />
-              <span>{u.username}</span>
+          {loading ? (
+            <div className="loading-users">Loading users...</div>
+          ) : users.length === 0 ? (
+            <div className="empty-users">
+              <p>No other users found.</p>
+              <p className="small">Invite friends to chat!</p>
             </div>
-          ))}
+          ) : (
+            users.map((u) => (
+              <div
+                key={u.id}
+                className={`user-item ${selectedUserId === u.id ? 'active' : ''}`}
+                onClick={() => setSelectedUserId(u.id)}
+              >
+                <div className={`user-status ${u.is_online ? 'online' : ''}`} />
+                <div className="user-info-item">
+                  <span className="username">{u.username}</span>
+                  <span className="user-address-tiny">{u.wallet_address?.slice(0, 6)}...</span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
       <div className="chat-area">
@@ -172,4 +180,3 @@ const ChatView: React.FC = () => {
 };
 
 export default ChatView;
-
