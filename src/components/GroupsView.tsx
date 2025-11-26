@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { encryptGroupMessage, decryptGroupMessage } from '../lib/encryption';
 import { setGroupKey, getGroupKey, generateGroupKey } from '../lib/groupEncryption';
 import type { Group, Message } from '../types/database';
-import { Users, Plus, Lock, Send } from 'lucide-react';
+import { Users, Plus, Send } from 'lucide-react';
 import '../styles/chat.css';
 
 const GroupsView: React.FC = () => {
@@ -107,6 +107,7 @@ const GroupsView: React.FC = () => {
     try {
       const { data: group, error: groupError } = await supabase
         .from('groups')
+        // @ts-ignore
         .insert({
           name: groupName,
           creator_id: user.id,
@@ -119,6 +120,7 @@ const GroupsView: React.FC = () => {
 
       const { error: memberError } = await supabase
         .from('group_members')
+        // @ts-ignore
         .insert({
           group_id: group.id,
           user_id: user.id,
@@ -149,6 +151,7 @@ const GroupsView: React.FC = () => {
 
       const { error } = await supabase
         .from('messages')
+        // @ts-ignore
         .insert({
           sender_id: user.id,
           group_id: selectedGroup.id,

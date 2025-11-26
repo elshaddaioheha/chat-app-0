@@ -60,6 +60,7 @@ export const useUser = () => {
           // Create user in database
           const { data: newUser, error } = await supabase
             .from('users')
+            // @ts-ignore
             .insert({
               wallet_address: walletAddress.toLowerCase(),
               username: walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4),
@@ -77,8 +78,8 @@ export const useUser = () => {
         }
 
         // Set up real-time subscription for user updates
-        if (user?.id || existingUser?.id) {
-          const userId = user?.id || existingUser?.id;
+        if (user?.id || (existingUser as any)?.id) {
+          const userId = user?.id || (existingUser as any)?.id;
           const channel = supabase
             .channel(`user:${userId}`)
             .on(

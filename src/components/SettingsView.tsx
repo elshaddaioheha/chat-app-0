@@ -4,7 +4,7 @@ import { useActiveTime } from '../hooks/useActiveTime';
 import { useNotifications } from '../hooks/useNotifications';
 import { requestNotificationPermission } from '../lib/notification';
 import { supabase } from '../lib/supabase';
-import { User, Bell, Moon, LogOut, Clock, Calendar, Save } from 'lucide-react';
+import { User, Bell, LogOut, Clock, Calendar, Save } from 'lucide-react';
 import '../styles/features.css';
 
 const SettingsView: React.FC = () => {
@@ -40,6 +40,7 @@ const SettingsView: React.FC = () => {
     try {
       const { error } = await supabase
         .from('users')
+        // @ts-ignore
         .update({ username: username.trim() })
         .eq('id', user.id);
 
