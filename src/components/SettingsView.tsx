@@ -4,6 +4,7 @@ import { useActiveTime } from '../hooks/useActiveTime';
 import { useNotifications } from '../hooks/useNotifications';
 import { requestNotificationPermission } from '../lib/notification';
 import { supabase } from '../lib/supabase';
+import { User, Bell, Moon, LogOut, Clock, Calendar, Save } from 'lucide-react';
 import '../styles/features.css';
 
 const SettingsView: React.FC = () => {
@@ -11,7 +12,6 @@ const SettingsView: React.FC = () => {
   const { activeTimeFormatted, totalActiveTime } = useActiveTime();
   const { markAllAsRead } = useNotifications();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
   const [username, setUsername] = useState(user?.username || '');
 
   useEffect(() => {
@@ -21,7 +21,6 @@ const SettingsView: React.FC = () => {
   }, [user]);
 
   useEffect(() => {
-    // Check notification permission
     if ('Notification' in window) {
       setNotificationsEnabled(Notification.permission === 'granted');
     }
@@ -53,135 +52,144 @@ const SettingsView: React.FC = () => {
   };
 
   const formatTime = (ms: number) => {
-    const seconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (days > 0) {
-      return `${days}d ${hours % 24}h`;
-    } else if (hours > 0) {
-      return `${hours}h ${minutes % 60}m`;
-    } else if (minutes > 0) {
-      return `${minutes}m ${seconds % 60}s`;
-    }
-    return `${seconds}s`;
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
   };
 
   return (
-    <div className="settings-view">
-      <div className="settings-header">
-        <h1>⚙️ Settings</h1>
+    <div className="feature-view">
+      <div className="feature-header">
+        <h1 className="feature-title">Settings</h1>
+        <p className="feature-subtitle">Manage your account and preferences</p>
       </div>
 
-      <div className="settings-content">
-        <div className="settings-section">
-          <h2>Profile</h2>
-          <div className="setting-item">
-            <label>Username</label>
-            <div className="input-group">
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username"
-                className="setting-input"
-              />
-              <button onClick={handleUpdateUsername} className="save-button">
-                Save
-              </button>
-            </div>
-          </div>
-          <div className="setting-item">
-            <label>Wallet Address</label>
+      <div className="settings-section">
+        <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <User size={20} /> Profile
+        </div>
+        <div className="form-group">
+          <label className="form-label">Username</label>
+          <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
             <input
               type="text"
-              value={user?.wallet_address || ''}
-              disabled
-              className="setting-input"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter username"
+              className="form-input"
             />
-            <p className="setting-description">Wallet address is managed by Privy</p>
-          </div>
-          <div className="setting-item">
-            <label>XP</label>
-            <div className="stat-display">
-              {user?.xp || 0} XP
-            </div>
-          </div>
-        </div>
-
-        <div className="settings-section">
-          <h2>Activity</h2>
-          <div className="setting-item">
-            <label>Total Active Time</label>
-            <div className="stat-display">
-              {activeTimeFormatted || formatTime(totalActiveTime || 0)}
-            </div>
-          </div>
-          <div className="setting-item">
-            <label>Account Created</label>
-            <div className="stat-display">
-              {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
-            </div>
-          </div>
-        </div>
-
-        <div className="settings-section">
-          <h2>Notifications</h2>
-          <div className="setting-item">
-            <label>
-              <input
-                type="checkbox"
-                checked={notificationsEnabled}
-                onChange={handleEnableNotifications}
-                className="setting-checkbox"
-              />
-              <span>Enable Browser Notifications</span>
-            </label>
-            <p className="setting-description">
-              Get notified when you receive new messages
-            </p>
-          </div>
-          <div className="setting-item">
-            <button onClick={markAllAsRead} className="action-button">
-              Mark All Notifications as Read
-            </button>
-          </div>
-        </div>
-
-        <div className="settings-section">
-          <h2>Appearance</h2>
-          <div className="setting-item">
-            <label>
-              <input
-                type="checkbox"
-                checked={darkMode}
-                onChange={(e) => setDarkMode(e.target.checked)}
-                className="setting-checkbox"
-              />
-              <span>Dark Mode</span>
-            </label>
-            <p className="setting-description">
-              Dark mode is always enabled in this version
-            </p>
-          </div>
-        </div>
-
-        <div className="settings-section">
-          <h2>Account</h2>
-          <div className="setting-item">
             <button
-              onClick={() => window.location.href = '/sign-out'}
-              className="danger-button"
+              onClick={handleUpdateUsername}
+              style={{
+                padding: '0 var(--spacing-lg)',
+                backgroundColor: 'var(--color-primary)',
+                color: 'var(--color-primary-text)',
+                border: 'none',
+                borderRadius: 'var(--radius-md)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
             >
-              Sign Out
+              <Save size={16} /> Save
             </button>
           </div>
         </div>
+        <div className="form-group">
+          <label className="form-label">Wallet Address</label>
+          <input
+            type="text"
+            value={user?.wallet_address || ''}
+            disabled
+            className="form-input"
+            style={{ opacity: 0.7, cursor: 'not-allowed' }}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label">XP</label>
+          <div style={{ fontSize: 'var(--font-size-lg)', fontWeight: 600 }}>
+            {user?.xp || 0} XP
+          </div>
+        </div>
+      </div>
+
+      <div className="settings-section">
+        <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Clock size={20} /> Activity
+        </div>
+        <div className="form-group">
+          <label className="form-label">Total Active Time</label>
+          <div style={{ fontSize: 'var(--font-size-lg)', fontWeight: 500 }}>
+            {activeTimeFormatted || formatTime(totalActiveTime || 0)}
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Account Created</label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-text-secondary)' }}>
+            <Calendar size={16} />
+            {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
+          </div>
+        </div>
+      </div>
+
+      <div className="settings-section">
+        <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Bell size={20} /> Notifications
+        </div>
+        <div className="form-group">
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={notificationsEnabled}
+              onChange={handleEnableNotifications}
+              style={{ width: '16px', height: '16px' }}
+            />
+            <span>Enable Browser Notifications</span>
+          </label>
+          <p style={{ marginTop: '4px', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
+            Get notified when you receive new messages
+          </p>
+        </div>
+        <button
+          onClick={markAllAsRead}
+          style={{
+            padding: 'var(--spacing-sm) var(--spacing-md)',
+            backgroundColor: 'transparent',
+            border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-md)',
+            cursor: 'pointer',
+            fontSize: 'var(--font-size-sm)'
+          }}
+        >
+          Mark All Notifications as Read
+        </button>
+      </div>
+
+      <div className="settings-section">
+        <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <LogOut size={20} /> Account
+        </div>
+        <button
+          onClick={() => window.location.href = '/sign-out'}
+          style={{
+            padding: 'var(--spacing-md) var(--spacing-lg)',
+            backgroundColor: 'var(--color-error)',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 'var(--radius-md)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontWeight: 600
+          }}
+        >
+          <LogOut size={16} /> Sign Out
+        </button>
       </div>
     </div>
   );
 };
 
 export default SettingsView;
-

@@ -2,18 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../hooks/useUser';
 import { supabase } from '../lib/supabase';
 import type { LeaderboardEntry } from '../types/database';
+import { Trophy, Clock, Zap } from 'lucide-react';
 import '../styles/features.css';
 
 const Leaderboard: React.FC = () => {
   const { user } = useUser();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [timeframe, setTimeframe] = useState<'all' | 'week' | 'month'>('all');
 
   useEffect(() => {
     const loadLeaderboard = async () => {
       try {
-        // Get users with XP and active time
         const { data: users, error } = await supabase
           .from('users')
           .select('id, username, xp, total_active_time')
@@ -22,16 +21,13 @@ const Leaderboard: React.FC = () => {
 
         if (error) throw error;
 
-        // Create leaderboard entries
-        const leaderboardData: LeaderboardEntry[] = (users || []).map((u: any, index: number) => {
-          return {
-            user_id: u.id,
-            username: u.username,
-            xp: u.xp || 0,
-            total_active_time: u.total_active_time || 0,
-            rank: index + 1,
-          };
-        });
+        const leaderboardData: LeaderboardEntry[] = (users || []).map((u: any, index: number) => ({
+          user_id: u.id,
+          username: u.username,
+          xp: u.xp || 0,
+          total_active_time: u.total_active_time || 0,
+          rank: index + 1,
+        }));
 
         setLeaderboard(leaderboardData);
         setLoading(false);
@@ -42,120 +38,80 @@ const Leaderboard: React.FC = () => {
     };
 
     loadLeaderboard();
-
-    // Refresh leaderboard every 30 seconds
     const interval = setInterval(loadLeaderboard, 30000);
-
     return () => clearInterval(interval);
-  }, [timeframe]);
+  }, []);
 
   const formatTime = (ms: number) => {
-    const seconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (days > 0) {
-      return `${days}d ${hours % 24}h`;
-    } else if (hours > 0) {
-      return `${hours}h ${minutes % 60}m`;
-    } else if (minutes > 0) {
-      return `${minutes}m ${seconds % 60}s`;
-    }
-    return `${seconds}s`;
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
   };
 
   if (loading) {
     return (
-      <div className="leaderboard loading">
-        <p>Loading leaderboard...</p>
+      <div className="feature-view">
+        <div className="feature-header">
+          <h1 className="feature-title">Leaderboard</h1>
+        </div>
+        <p>Loading...</p>
       </div>
     );
   }
 
-  const userRank = leaderboard.findIndex(entry => entry.user_id === user?.id) + 1;
-
   return (
-    <div className="leaderboard">
-      <div className="leaderboard-header">
-        <h1>🏆 Leaderboard</h1>
-        <div className="timeframe-selector">
-          <button
-            className={timeframe === 'all' ? 'active' : ''}
-            onClick={() => setTimeframe('all')}
-          >
-            All Time
-          </button>
-          <button
-            className={timeframe === 'week' ? 'active' : ''}
-            onClick={() => setTimeframe('week')}
-          >
-            This Week
-          </button>
-          <button
-            className={timeframe === 'month' ? 'active' : ''}
-            onClick={() => setTimeframe('month')}
-          >
-            This Month
-          </button>
-        </div>
+    <div className="feature-view">
+      <div className="feature-header">
+        <h1 className="feature-title">Leaderboard</h1>
+        <p className="feature-subtitle">Top users by XP and activity</p>
       </div>
 
-      {userRank > 0 && (
-        <div className="user-rank-card">
-          <h2>Your Rank: #{userRank}</h2>
-          <div className="user-stats">
-            <div className="stat">
-              <span className="stat-label">XP</span>
-              <span className="stat-value">
-                {leaderboard[userRank - 1]?.xp || 0}
-              </span>
-            </div>
-            <div className="stat">
-              <span className="stat-label">Active Time</span>
-              <span className="stat-value">
-                {formatTime(leaderboard[userRank - 1]?.total_active_time || 0)}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="leaderboard-list">
-        <div className="leaderboard-header-row">
-          <div className="rank-col">Rank</div>
-          <div className="user-col">User</div>
-          <div className="xp-col">XP</div>
-          <div className="time-col">Active Time</div>
-        </div>
-        {leaderboard.slice(0, 50).map((entry) => {
-          const isCurrentUser = entry.user_id === user?.id;
-          return (
-            <div
-              key={entry.user_id}
-              className={`leaderboard-entry ${isCurrentUser ? 'current-user' : ''} ${entry.rank <= 3 ? `rank-${entry.rank}` : ''}`}
-            >
-              <div className="rank-col">
-                {entry.rank <= 3 && (
-                  <span className="medal">
-                    {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : '🥉'}
-                  </span>
-                )}
-                {entry.rank > 3 && <span className="rank-number">#{entry.rank}</span>}
-              </div>
-              <div className="user-col">
-                <span className="username">{entry.username}</span>
-                {isCurrentUser && <span className="you-badge">You</span>}
-              </div>
-              <div className="xp-col">{entry.xp}</div>
-              <div className="time-col">{formatTime(entry.total_active_time)}</div>
-            </div>
-          );
-        })}
-      </div>
+      <table className="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>XP</th>
+            <th>Active Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {leaderboard.map((entry) => {
+            const isCurrentUser = entry.user_id === user?.id;
+            return (
+              <tr key={entry.user_id} className={`leaderboard-row ${isCurrentUser ? 'current-user' : ''}`}>
+                <td>
+                  <div className={`rank-badge rank-${entry.rank <= 3 ? entry.rank : 'other'}`}>
+                    {entry.rank}
+                  </div>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontWeight: 500 }}>{entry.username}</span>
+                    {isCurrentUser && (
+                      <span style={{ fontSize: '0.75rem', padding: '2px 6px', backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-text)', borderRadius: '4px' }}>You</span>
+                    )}
+                  </div>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Zap size={14} />
+                    {entry.xp}
+                  </div>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Clock size={14} />
+                    {formatTime(entry.total_active_time)}
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };
 
 export default Leaderboard;
-

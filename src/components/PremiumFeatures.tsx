@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useUser } from '../hooks/useUser';
 import { supabase } from '../lib/supabase';
+import { Lock, Palette, BarChart, Users, Cloud, Zap, Check } from 'lucide-react';
 import '../styles/features.css';
 
 const PremiumFeatures: React.FC = () => {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
 
-  // Check if user has premium status based on user data
   const isPremium = user?.premium_status || false;
   const daysRemaining = user?.premium_expires_at
     ? Math.ceil((new Date(user.premium_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
@@ -18,10 +18,8 @@ const PremiumFeatures: React.FC = () => {
 
     setLoading(true);
     try {
-      // In a real app, this would integrate with a payment processor
-      // For now, we'll simulate premium activation
       const expiresAt = new Date();
-      expiresAt.setMonth(expiresAt.getMonth() + 1); // 1 month from now
+      expiresAt.setMonth(expiresAt.getMonth() + 1);
 
       const { error } = await supabase
         .from('users')
@@ -32,8 +30,7 @@ const PremiumFeatures: React.FC = () => {
         .eq('id', user.id);
 
       if (error) throw error;
-
-      alert('Premium activated! (This is a demo - implement payment processing)');
+      alert('Premium activated! (Demo)');
     } catch (error) {
       console.error('Error upgrading to premium:', error);
       alert('Error upgrading to premium. Please try again.');
@@ -44,89 +41,95 @@ const PremiumFeatures: React.FC = () => {
 
   const features = [
     {
-      icon: '🔒',
+      icon: <Lock size={24} />,
       title: 'End-to-End Encryption',
       description: 'Advanced encryption for all your messages and groups',
     },
     {
-      icon: '🎨',
+      icon: <Palette size={24} />,
       title: 'Custom Themes',
       description: 'Personalize your chat experience with custom themes',
     },
     {
-      icon: '📊',
+      icon: <BarChart size={24} />,
       title: 'Advanced Analytics',
       description: 'Detailed statistics and insights about your activity',
     },
     {
-      icon: '👥',
+      icon: <Users size={24} />,
       title: 'Unlimited Groups',
       description: 'Create and join unlimited groups',
     },
     {
-      icon: '☁️',
+      icon: <Cloud size={24} />,
       title: 'Cloud Storage',
       description: 'Unlimited file storage and sharing',
     },
     {
-      icon: '⚡',
+      icon: <Zap size={24} />,
       title: 'Priority Support',
       description: 'Get priority customer support',
     },
   ];
 
   return (
-    <div className="premium-features">
-      <div className="premium-header">
-        <h1>⭐ Premium Features</h1>
-        {isPremium ? (
-          <div className="premium-status active">
-            <span>Active Premium</span>
-            {daysRemaining !== null && (
-              <span className="days-remaining">
+    <div className="feature-view">
+      <div className="feature-header">
+        <h1 className="feature-title">Premium Features</h1>
+        <p className="feature-subtitle">Unlock the full potential of ChatXP</p>
+      </div>
+
+      <div style={{ marginBottom: 'var(--spacing-xl)', padding: 'var(--spacing-lg)', backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--spacing-md)' }}>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 600 }}>
+              {isPremium ? 'Active Premium' : 'Free Plan'}
+            </h2>
+            {isPremium && daysRemaining !== null && (
+              <p style={{ color: 'var(--color-text-secondary)' }}>
                 {daysRemaining > 0 ? `${daysRemaining} days remaining` : 'Expired'}
-              </span>
+              </p>
             )}
           </div>
-        ) : (
-          <div className="premium-status inactive">
-            <span>Free Plan</span>
-          </div>
+          {!isPremium && (
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 700 }}>$9.99</div>
+              <div style={{ color: 'var(--color-text-secondary)' }}>/month</div>
+            </div>
+          )}
+        </div>
+
+        {!isPremium && (
+          <button
+            onClick={handleUpgrade}
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: 'var(--spacing-md)',
+              backgroundColor: 'var(--color-primary)',
+              color: 'var(--color-primary-text)',
+              border: 'none',
+              borderRadius: 'var(--radius-md)',
+              fontSize: 'var(--font-size-lg)',
+              fontWeight: 600,
+              cursor: loading ? 'not-allowed' : 'pointer',
+              opacity: loading ? 0.7 : 1,
+            }}
+          >
+            {loading ? 'Processing...' : 'Upgrade Now'}
+          </button>
         )}
       </div>
 
-      {!isPremium && (
-        <div className="upgrade-section">
-          <div className="upgrade-card">
-            <h2>Upgrade to Premium</h2>
-            <div className="price">
-              <span className="currency">$</span>
-              <span className="amount">9.99</span>
-              <span className="period">/month</span>
-            </div>
-            <button
-              className="upgrade-button"
-              onClick={handleUpgrade}
-              disabled={loading}
-            >
-              {loading ? 'Processing...' : 'Upgrade Now'}
-            </button>
-            <p className="upgrade-note">
-              * This is a demo. Implement payment processing (Stripe, PayPal, etc.) for production.
-            </p>
-          </div>
-        </div>
-      )}
-
-      <div className="features-grid">
+      <div className="premium-grid">
         {features.map((feature, index) => (
-          <div key={index} className={`feature-card ${isPremium ? 'premium' : 'locked'}`}>
-            <div className="feature-icon">{feature.icon}</div>
-            <h3>{feature.title}</h3>
-            <p>{feature.description}</p>
+          <div key={index} className="feature-card">
+            <div className="card-icon">{feature.icon}</div>
+            <h3 className="card-title" style={{ fontSize: 'var(--font-size-lg)', marginTop: 'var(--spacing-sm)' }}>{feature.title}</h3>
+            <p className="card-description">{feature.description}</p>
             {!isPremium && (
-              <div className="locked-overlay">
-                <span>🔒 Premium Only</span>
+              <div style={{ marginTop: 'var(--spacing-md)', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
+                <Lock size={14} /> Premium Only
               </div>
             )}
           </div>

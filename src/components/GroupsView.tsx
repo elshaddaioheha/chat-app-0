@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { encryptGroupMessage, decryptGroupMessage } from '../lib/encryption';
 import { setGroupKey, getGroupKey, generateGroupKey } from '../lib/groupEncryption';
 import type { Group, Message } from '../types/database';
+import { Users, Plus, Lock, Send } from 'lucide-react';
 import '../styles/chat.css';
 
 const GroupsView: React.FC = () => {
@@ -36,7 +37,6 @@ const GroupsView: React.FC = () => {
 
     loadGroups();
 
-    // Set up real-time subscription
     const channel = supabase
       .channel('groups')
       .on(
@@ -80,7 +80,6 @@ const GroupsView: React.FC = () => {
 
     loadMessages();
 
-    // Set up real-time subscription
     const channel = supabase
       .channel(`group:${selectedGroup.id}`)
       .on(
@@ -118,7 +117,6 @@ const GroupsView: React.FC = () => {
 
       if (groupError) throw groupError;
 
-      // Add creator as admin member
       const { error: memberError } = await supabase
         .from('group_members')
         .insert({
@@ -140,14 +138,12 @@ const GroupsView: React.FC = () => {
     if (!user || !selectedGroup || !message.trim()) return;
 
     try {
-      // Get or create group key
       let groupKey = getGroupKey(selectedGroup.id);
       if (!groupKey) {
         groupKey = generateGroupKey();
         setGroupKey(selectedGroup.id, groupKey);
       }
 
-      // Encrypt message for group
       const encrypted = encryptGroupMessage(message, groupKey);
       const encryptedContent = JSON.stringify(encrypted);
 
@@ -169,57 +165,57 @@ const GroupsView: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="groups-view loading">
+      <div className="chat-view loading">
         <p>Loading groups...</p>
       </div>
     );
   }
 
   return (
-    <div className="groups-view">
-      <div className="groups-sidebar">
-        <div className="groups-header">
+    <div className="chat-view">
+      <div className="chat-list">
+        <div className="chat-list-header">
           <h2>Groups</h2>
-          <button className="create-group-btn" onClick={handleCreateGroup}>
-            + Create
+          <button className="refresh-btn" onClick={handleCreateGroup} title="Create Group">
+            <Plus size={20} />
           </button>
         </div>
-        <div className="create-group-form">
+        <div style={{ padding: 'var(--spacing-sm)' }}>
           <input
             type="text"
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
-            placeholder="Group name..."
-            className="group-name-input"
+            placeholder="New group name..."
+            className="chat-input"
+            style={{ padding: '8px', fontSize: '0.9rem', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}
+            onKeyDown={(e) => e.key === 'Enter' && handleCreateGroup()}
           />
         </div>
-        <div className="groups-list">
+        <div className="user-list">
           {groups.map((group) => (
-            <button
+            <div
               key={group.id}
-              className={`group-item ${selectedGroup?.id === group.id ? 'active' : ''}`}
+              className={`user-item ${selectedGroup?.id === group.id ? 'active' : ''}`}
               onClick={() => setSelectedGroup(group)}
             >
-              <div className="group-icon">👥</div>
-              <div className="group-info">
-                <h3>{group.name}</h3>
-                {group.description && <p>{group.description}</p>}
+              <div className="user-status" style={{ backgroundColor: 'var(--color-primary)' }} />
+              <div className="user-info-item">
+                <span className="username">{group.name}</span>
+                <span className="user-address-tiny">{group.description || 'No description'}</span>
               </div>
-            </button>
+            </div>
           ))}
         </div>
       </div>
-      <div className="group-chat">
+      <div className="chat-area">
         {selectedGroup ? (
           <>
-            <div className="group-chat-header">
-              <h2>{selectedGroup.name}</h2>
-              <span className="encrypted-badge">🔒</span>
-              {selectedGroup.min_xp_required > 0 && (
-                <span className="xp-required">⚡ {selectedGroup.min_xp_required}+ XP</span>
-              )}
+            <div className="chat-header">
+              <div className="chat-header-info">
+                <h3>{selectedGroup.name}</h3>
+              </div>
             </div>
-            <div className="group-messages">
+            <div className="messages-container">
               {messages.map((msg) => {
                 const isOwn = msg.sender_id === user?.id;
                 let content = '[Decryption failed]';
@@ -242,10 +238,11 @@ const GroupsView: React.FC = () => {
                 }
 
                 return (
-                  <div key={msg.id} className={`message ${isOwn ? 'own' : 'other'}`}>
-                    <div className="message-content">
-                      <div className="message-sender">{msg.sender?.username || 'Unknown'}</div>
-                      <span className="encrypted-badge">🔒</span>
+                  <div key={msg.id} className={`message ${isOwn ? 'sent' : 'received'}`}>
+                    <div className="message-bubble">
+                      <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: 4, color: isOwn ? 'rgba(255,255,255,0.8)' : 'var(--color-text-secondary)' }}>
+                        {msg.sender?.username || 'Unknown'}
+                      </div>
                       <p>{content}</p>
                       <span className="message-time">
                         {new Date(msg.created_at).toLocaleTimeString()}
@@ -255,26 +252,29 @@ const GroupsView: React.FC = () => {
                 );
               })}
             </div>
-            <div className="group-input">
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Type a message..."
-                className="message-input"
-              />
-              <button
-                onClick={() => handleSendMessage()}
-                className="send-button"
-                disabled={!message.trim()}
-              >
-                Send
-              </button>
+            <div className="chat-input-area">
+              <div className="chat-input-form">
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Type a message..."
+                  className="chat-input"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
+                />
+                <button onClick={handleSendMessage} className="send-button" disabled={!message.trim()}>
+                  <Send size={20} />
+                </button>
+              </div>
             </div>
           </>
         ) : (
-          <div className="no-group-selected">
+          <div className="empty-chat">
+            <Users size={64} />
             <p>Select or create a group to start chatting</p>
           </div>
         )}
@@ -284,4 +284,3 @@ const GroupsView: React.FC = () => {
 };
 
 export default GroupsView;
-
