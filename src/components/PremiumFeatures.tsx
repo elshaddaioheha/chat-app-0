@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '../hooks/useUser';
 import { supabase } from '../lib/supabase';
-import { Lock, Palette, BarChart, Users, Cloud, Zap, Check } from 'lucide-react';
+import { Lock, Palette, BarChart, Users, Cloud, Zap } from 'lucide-react';
 import '../styles/features.css';
 
 const PremiumFeatures: React.FC = () => {
@@ -23,6 +23,7 @@ const PremiumFeatures: React.FC = () => {
 
       const { error } = await supabase
         .from('users')
+        // @ts-ignore
         .update({
           premium_status: true,
           premium_expires_at: expiresAt.toISOString(),

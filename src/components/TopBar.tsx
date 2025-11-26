@@ -6,12 +6,14 @@ import '../styles/layout.css';
 
 const TopBar: React.FC = () => {
     const { user } = useUser();
-    const { logout } = usePrivy();
+    const { logout, user: privyUser, authenticated } = usePrivy();
 
     const truncateAddress = (address: string) => {
         if (!address) return '';
         return `${address.slice(0, 6)}...${address.slice(-4)}`;
     };
+
+    const displayAddress = user?.wallet_address || privyUser?.wallet?.address;
 
     return (
         <div className="top-bar">
@@ -25,7 +27,7 @@ const TopBar: React.FC = () => {
                     <button className="wallet-button" onClick={logout}>
                         <Wallet size={18} />
                         <span className="wallet-address">
-                            {user?.wallet_address ? truncateAddress(user.wallet_address) : 'Connect Wallet'}
+                            {authenticated && displayAddress ? truncateAddress(displayAddress) : 'Connect Wallet'}
                         </span>
                         <ChevronDown size={16} />
                     </button>
