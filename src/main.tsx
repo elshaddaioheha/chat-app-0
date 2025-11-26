@@ -8,7 +8,7 @@ import './index.css';
 const PRIVY_APP_ID = import.meta.env.VITE_PRIVY_APP_ID;
 
 // Check if Privy App ID is valid
-const isInvalidKey = !PRIVY_APP_ID || 
+const isInvalidKey = !PRIVY_APP_ID ||
   PRIVY_APP_ID.includes('your_privy_app_id') ||
   PRIVY_APP_ID === 'your_privy_app_id_here';
 
