@@ -285,5 +285,3 @@ For issues and questions:
 - [ ] NFT integration
 
 ---
-
-Built with ❤️ using React, Privy, Supabase, and TweetNaCl
